@@ -93,10 +93,11 @@ mezzanine-project my_first_mezzanine_site
 			    <p>Seem familiar?</p>
 
 			    <aside class="notes">
-			      * This assumes python3 on Ubuntu
-			      * python3-dev, libjpeg required for building Pillow
-			      * A few other libraries required if you want Pillow to support formats other than PNG + JPEG, see the Pillow docs
-			      * Almost identical to getting started with Django
+			      <ul>
+				<li>This assumes python3 on Ubuntu</li>
+				<li>python3-dev, libjpeg required for building Pillow</li>
+				<li>A few other libraries required if you want Pillow to support formats other than PNG + JPEG, see the Pillow docs</li>
+				<li>Almost identical to getting started with Django</li>
 			    </aside>
 			  </section>
 
@@ -159,6 +160,7 @@ mezzanine-project my_first_mezzanine_site
 			      <ul>
 				<li>django-grappelli for the admin interface</li>
 				<li>TinyMCE4 editor WYSIWYG, can be replaced</li>
+				<li>Inline editing</li>
 			      </ul>
 			    </section>
 			  </section>
@@ -264,7 +266,294 @@ mezzanine-project my_first_mezzanine_site
 			  </section>
 
 			  <section>
-			    <h2>Page-based</h2>
+			    <section>
+			      <h2>Page-based</h2>
+
+			      <ul>
+				<li>Small (~10) number of objects</li>
+				<li>Manual control over position in site hierachy</li>
+				<li>Appear in menus</li>
+			      </ul>
+
+			      <aside class="notes">
+				<ul>
+				  <li>Objects can appear in menus, just a bit more work involved</li>
+				</ul>
+			      </aside>
+			    </section>
+
+			    <section>
+			      <h2>Page-based</h2>
+
+			      <h3>Implementation</h3>
+
+			      <ul>
+				<li>Subclass <code>mezzanine.pages.models.Page</code></li>
+				<li>Don't need to write your own view</li>
+				<li class="fragment">Or just use <code>mezzanine.pages.models.RichTextPage</code></li>
+			      </ul>
+			    </section>
+
+			    <section>
+			      <h2>Page-based</h2>
+
+			      <h3>Implementation - models.py</h3>
+
+			      <pre>TODO: Code sample showing how to setup the model</pre>
+
+			    </section>
+
+			    <section>
+			      <h2>Page-based</h2>
+
+			      <h3>Implementation - admin.py</h3>
+
+			      <pre>TODO: Code sample showing how to setup the admin</pre>
+
+			    </section>
+
+			    <section>
+			      <h2>Page-based</h2>
+
+			      <h3>Implementation - template</h3>
+
+			      <pre>Example template</pre>
+
+			    </section>
+
+			    <section>
+			      <h2>Page-based</h2>
+
+			      <h3>Aside: Template lookup order</h3>
+
+			      <ul>
+				<li>pages/[Page slug].html</li>
+				<li>pages/[Class name].html</li>
+				<li>pages/[Parent slug]/[Page slug].html</li>
+				<li>pages/[Parent slug]/[Page slug]/[Class name].html</li>
+				<li>pages/[Parent slug]/[Class name].html</li>
+				<li>pages/page.html</li>
+			      </ul>
+
+			    </section>
+
+			    <section>
+			      <h2>Page-based</h2>
+
+			      <h3>Aside: Template lookup order</h3>
+
+			      <p>eg, directors/big-boss, type <code>Employee</code></p>
+
+			      <ul>
+				<li>pages/big-boss.html</li>
+				<li>pages/employee.html</li>
+				<li>pages/directors/big-boss.html</li>
+				<li>pages/directors/big-boss/employee.html</li>
+				<li>pages/directors/employee.html</li>
+				<li>pages/page.html</li>
+			      </ul>
+
+			    </section>
+			  </section>
+
+			  <section>
+			    <section>
+			      <h2>Object-based</h2>
+
+			      <ul>
+				<li>When you expect to have a lot of it</li>
+				<li>Products, publications...</li>
+				<li>Where you expect people to find them by search or a list page</li>
+				<li>Not in menus</li>
+				<li>Subclass <code>mezzanine.core.models.Displayable</code></li>
+				<li>Need to define your own view logic</li>
+			      </ul>
+
+			      <aside class="notes">
+				<ul>
+				  <li>More than you want to manage by hand</li>
+				  <li>Not in menus unless you work for it</li>
+				  <li><code>Page</code> is a subclass of Displayable</li>
+				</ul>
+			      </aside>
+			    </section>
+
+			    <section>
+			      <h2>Object-based</h2>
+
+			      <h3>Implementation - models.py</h3>
+
+			      <pre>TODO: Code sample showing how to setup the model</pre>
+
+			    </section>
+
+			    <section>
+			      <h2>Object-based</h2>
+
+			      <h3>Implementation - admin.py</h3>
+
+			      <pre>TODO: Code sample showing how to setup the admin</pre>
+
+			    </section>
+
+			    <section>
+			      <h2>Object-based</h2>
+
+			      <h3>Implementation - views.py</h3>
+
+			      <pre>Example view</pre>
+			    </section>
+
+			    <section>
+			      <h2>Object-based</h2>
+
+			      <h3>Implementation - template</h3>
+
+			      <pre>Example template</pre>
+
+			    </section>
+
+			  </section>
+
+			  <section>
+
+			    <section>
+			      <h2>Comparison</h2>
+
+			      <h3>Things Mezzanine does well</h3>
+
+			    </section>
+
+			    <section>
+			      <h2>Things Mezzanine does well</h2>
+
+			      <h3>Config is not Content</h3>
+
+			      <ul>
+				<li>Structure is not content</li>
+				<li>Config, Structure should be version, replicatable</li>
+				<li>Content is dynamic</li>
+				<li>Define your content and structure in code, store it in version control</li>
+				<li>Everything else is content, store it in a database</li>
+				<li>Continuous Integration!</li>
+				<li>Repeatable Deploys!</li>
+			      </ul>
+
+			    </section>
+
+			    <section>
+			      <h2>Things Mezzanine does well</h2>
+
+			      <h3>Control your markup</h3>
+
+			      <img width="33%" src="/images/not_enough_work_crop.png" />
+
+			    </section>
+
+			    <section>
+			      <h2>Things Mezzanine does well</h2>
+
+			      <h3>Control your markup</h3>
+
+			      <ul>
+				<li>Uses the Django template system</li>
+				<li>Doesn't enforce an paticular structure on the markup</li>
+				<li>Default templates suggest a sensible approach, override them if you want</li>
+			      </ul>
+
+			    </section>
+
+			    <section>
+			      <h2>Things Mezzanine does well</h2>
+
+			      <h3>Timed publish and expire</h3>
+
+			      <ul>
+				<li>Built in</li>
+				<li>Just works</li>
+			      </ul>
+			    </section>
+
+			    <section>
+			      <h2>Things Mezzanine does well</h2>
+
+			      <h3>Drop in addition to existing site</h3>
+
+			      <ul>
+				<li>Nice webapp, how do you update it?</li>
+				<li>Mezzanine is just another Django app, retrofitting is pretty straight forward</li>
+				<li>Template tweaking is usually the hardest part</li>
+			      </ul>
+			    </section>
+			  </section>
+
+			  <section>
+			    <section>
+			      <h2>Comparison</h2>
+
+			      <h3>Things Mezzanine doesn't do so well</h3>
+
+			    </section>
+			    <section>
+			      <h2>Things Mezzanine doesn't do so well</h2>
+
+			      <h3>Versioned content</h3>
+
+			      <ul>
+				<li>No support in core Mezzanine</li>
+				<li>No generic solution (that I know of)</li>
+				<li>Could roll your own, not easy</li>
+				<li>Something other CMS solutions support</li>
+			      </ul>
+
+			    </section>
+
+			    <section>
+			      <h2>Things Mezzanine doesn't do so well</h2>
+
+			      <h3>Documentation</h3>
+
+			      <ul>
+				<li>Curse of the moderately successfull open-source project</li>
+				<li>Effors underway to improve this</li>
+				<li>You can help!</li>
+				<li>Source is very readable...</li>
+			      </ul>
+
+			    </section>
+
+			    <section>
+			      <h2>Code changes are common</h2>
+
+			      <ul>
+				<li>Not for organizations that find code deploys hard/scary</li>
+				<li>Structure is code, code changes often</li>
+			      </ul>
+			    </section>
+			  </section>
+
+			  <section>
+			    <h2>Summary</h2>
+
+			    <ul>
+			      <li>Mezzanine: It's pretty much just Django, with some extra bits to make life easier</li>
+			      <li>Quick to get started</li>
+			      <li>Structure != Content</li>
+			      <li>Strong ecosystem, many Django modules can be used</li>
+			      <li>Pages vs Objects</li>
+			      <li>Add it to your existing Django app</li>
+			      <li>Help write the docs</li>
+			    </ul>
+			  </section>
+
+			  <section>
+			    <ul>
+			      <li>Slides: <a href="http://git.willhughes.name/pycon-2015-mezzanine-slides">http://git.willhughes.name/pycon-2015-mezzanine-slides</a></li>
+			      <li>Demo Site: <a href="http://git.willhughes.name/pycon-2015-mezzanine-demo-site">http://git.willhughes.name/pycon-2015-mezzanine-demo-site</a></li>
+			      <li>@nzwillhughes</li>
+			      <li><a href="http://willhughes.name/">willhughes.name</a></li>
+			      <li>Comics by Randall Munroe, xkcd.com</li>
+			  </section>
 
 			</div>
 
