@@ -26,6 +26,7 @@
 			link.rel = 'stylesheet';
 			link.type = 'text/css';
 			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+//			link.href = 'css/print/pdf.css';
 			document.getElementsByTagName( 'head' )[0].appendChild( link );
 		</script>
 
@@ -49,9 +50,9 @@
 			    <h2>A bit of background</h2>
 
 			    <ul>
-			      <li class="fragment">Python dev for Catalyst</li>
-			      <li class="fragment">Catalyst Christchurch has built several sites using Mezzanine</li>
-			      <li class="fragment">Catalyst also does a lot of Drupal</li>
+			      <li>Python dev for Catalyst</li>
+			      <li>Catalyst Christchurch has built several sites using Mezzanine</li>
+			      <li>Catalyst also does a lot of Drupal</li>
 			    </ul>
 			    <aside class="notes">
 			      1 site was a rebuild of an older Drupal site, will be drawing comparisons against Druapl
@@ -61,13 +62,13 @@
 			  <section>
 			    <h2>Mezzanine in a nutshell</h2>
 			    <ul>
-			      <li class="fragment">A toolkit, built on top of Django, designed for building sites with editable content</li>
-			      <li class="fragment">A toolkit with a somewhat opinionated base template <span class="fragment">... that you are free to discard if you don't like it</span></li>
-			      <li class="fragment">BSD Licence</li>
-			      <li class="fragment">Supports Django 1.7, 1.8</li>
-			      <li class="fragment">Supports Python 2.6, 2.7, 3.3+</li>
-			      <li class="fragment">Stephen McDonald</li>
-			      <li class="fragment"><a href="http://mezzanine.jupo.org/">mezzanine.jupo.org</a></li>
+			      <li>A toolkit, built on top of Django, designed for building sites with editable content</li>
+			      <li>A toolkit with a somewhat opinionated base template <span>... that you are free to discard if you don't like it</span></li>
+			      <li>BSD Licence</li>
+			      <li>Supports Django 1.7, 1.8</li>
+			      <li>Supports Python 2.6, 2.7, 3.3+</li>
+			      <li>Stephen McDonald</li>
+			      <li><a href="http://mezzanine.jupo.org/">mezzanine.jupo.org</a></li>
 			    </ul>
 			    <aside class="notes">
 			      <ul>
@@ -148,9 +149,9 @@ mezzanine-project my_first_mezzanine_site
 			      </aside>
 			    </section>
 
-			    <section>
+<!--			    <section>
 			      <img width="40%" src="/images/real_programmers_crop.png" />
-			    </section>
+			    </section> -->
 
 			    <section>
 			      <h2>Mezzanine Features</h2>
@@ -230,8 +231,8 @@ mezzanine-project my_first_mezzanine_site
 			      <h2>Structure of a Mezzanine Site</h2>
 
 			      <ul>
-				<li class="fragment">It's Just Django</li>
-				<li class="fragment">Do whatever you do with Django</li>
+				<li>It's Just Django</li>
+				<li>Do whatever you do with Django</li>
 			      </ul>
 
 			      <aside class="notes">
@@ -250,6 +251,7 @@ mezzanine-project my_first_mezzanine_site
 				<li>Deploy the wheel into a virtualenv</li>
 				<li>Use configparser to load a settings file</li>
 				<li>nginx + gunicorn</li>
+				<li>Seperate apps for models + theme/templates</li>
 				<li>Demo site has an example of how to do this</li>
 			      </ul>
 			    </section>
@@ -290,7 +292,7 @@ mezzanine-project my_first_mezzanine_site
 			      <ul>
 				<li>Subclass <code>mezzanine.pages.models.Page</code></li>
 				<li>Don't need to write your own view</li>
-				<li class="fragment">Or just use <code>mezzanine.pages.models.RichTextPage</code></li>
+				<li>Or just use <code>mezzanine.pages.models.RichTextPage</code></li>
 			      </ul>
 			    </section>
 
@@ -299,7 +301,14 @@ mezzanine-project my_first_mezzanine_site
 
 			      <h3>Implementation - models.py</h3>
 
-			      <pre>TODO: Code sample showing how to setup the model</pre>
+			      <pre><code data-trim contenteditable>
+from mezzanine.pages.models import Page, RichText
+
+class Employee(Page, RichText):
+
+    position = models.CharField(max_length=60)
+    photo = FileField(blank=True)
+			      </code></pre>
 
 			    </section>
 
@@ -308,16 +317,38 @@ mezzanine-project my_first_mezzanine_site
 
 			      <h3>Implementation - admin.py</h3>
 
-			      <pre>TODO: Code sample showing how to setup the admin</pre>
+			      <pre><code data-trim contenteditable>
+from mezzanine.pages.admin import PageAdmin
+
+admin.site.register(models.Employee, PageAdmin)
+			      </code></pre>
 
 			    </section>
 
 			    <section>
 			      <h2>Page-based</h2>
 
-			      <h3>Implementation - template</h3>
+			      <h3>Implementation - pages/employee.html</h3>
 
-			      <pre>Example template</pre>
+			      <pre><code data-trim contenteditable>
+{% extends 'pages/page.html' %}
+{% load mezzanine_tags %}
+
+{% block right_panel %}
+<div class="panel panel-default">
+  <div class="panel-body">
+    <img src="{{ MEDIA_URL }}{{ page.employee.photo }}" />
+  </div>
+</div>
+{% endblock %}
+
+{% block main %}
+{% editable page.employee.content %}
+{{ page.employee.content | richtext_filters | safe }}
+{% endeditable %}
+{% endblock %}
+
+			      </code></pre>
 
 			    </section>
 
@@ -383,7 +414,14 @@ mezzanine-project my_first_mezzanine_site
 
 			      <h3>Implementation - models.py</h3>
 
-			      <pre>TODO: Code sample showing how to setup the model</pre>
+			      <pre><code data-trim contenteditable>
+class Widget(Displayable, RichText):
+
+    category = models.ForeignKey(WidgetCategory)
+
+    def get_absolute_url(self):
+        return self.category.get_absolute_url() + self.slug
+			      </code></pre>
 
 			    </section>
 
@@ -392,7 +430,22 @@ mezzanine-project my_first_mezzanine_site
 
 			      <h3>Implementation - admin.py</h3>
 
-			      <pre>TODO: Code sample showing how to setup the admin</pre>
+			      <pre><code data-trim contenteditable>
+from mezzanine.core.admin import DisplayableAdmin
+import copy
+
+widget_fieldsets = copy.deepcopy(DisplayableAdmin.fieldsets)
+widget_fieldsets[0][1]["fields"].insert(1, "category")
+widget_fieldsets[0][1]["fields"].insert(1, "content")
+
+
+class WidgetAdmin(DisplayableAdmin):
+
+    fieldsets = widget_fieldsets
+    inlines = (TechnicalDocumentInline,)
+
+admin.site.register(models.Widget, WidgetAdmin)
+			      </code></pre>
 
 			    </section>
 
@@ -401,15 +454,44 @@ mezzanine-project my_first_mezzanine_site
 
 			      <h3>Implementation - views.py</h3>
 
-			      <pre>Example view</pre>
+			      <pre><code data-trim contenteditable>
+class WidgetView(TemplateView):
+
+    template_name = "widget.html"
+
+     def get_context_data(self, **kwargs):
+
+        ....
+
+        context['widget'] = category.widget_set\
+                              .published(for_user=self.request.user)\
+                              .get(slug=kwargs['widget_slug'])
+        ....
+
+        context['editable_obj'] = context['widget']
+        return context
+			      </code></pre>
 			    </section>
 
 			    <section>
 			      <h2>Object-based</h2>
 
-			      <h3>Implementation - template</h3>
+			      <h3>Implementation - widget.html</h3>
 
-			      <pre>Example template</pre>
+			      <pre><code data-trim contenteditable>
+{% extends 'base.html' %}
+{% load mezzanine_tags %}
+
+{% block meta_title %}
+{{ widget.title }}
+{% endblock %}
+
+{% block main %}
+{% editable widget.content %}
+{{ widget.content | richtext_filters | safe }}
+{% endeditable %}
+{% endblock %}
+			      </code></pre>
 
 			    </section>
 
@@ -457,7 +539,7 @@ mezzanine-project my_first_mezzanine_site
 
 			      <ul>
 				<li>Uses the Django template system</li>
-				<li>Doesn't enforce an paticular structure on the markup</li>
+				<li>Doesn't enforce any paticular structure on the markup</li>
 				<li>Default templates suggest a sensible approach, override them if you want</li>
 			      </ul>
 
