@@ -111,60 +111,21 @@ mezzanine-project my_first_mezzanine_site
 				<li>In-page editing</li>
 				<li>Multi-lingual sites</li>
 				<li>Complete control of markup</li>
-				<li>Disqus, Google Analytics, Akismet integration</li>
 			      </ul>
 			    </section>
 
 			    <section>
 			      <h2>Mezzanine Features</h2>
 
-			      <h3>Built on top of Django</h3>
+			      <h3>Continued...</h3>
 
 			      <ul>
-				<li>Uses existing Django components where it makes sense</li>
-				<ul>
-				  <li>Models, forms..</li>
-				  <li>Migrations, the ORM...</li>
-				</ul>
-				<li>Provides extended version of Django components where it makes things easier</li>
-				<li>Use the existing Django tooling for deploy etc</li>
-			      </ul>
-
-			    </section>
-
-			    <section>
-			      <h2>Mezzanine Features</h2>
-
-			      <h3>Structure is separate from content</h3>
-
-			      <ul>
-				<li>Structure is your code</li>
-				<li>Edit it with your favorite tools: emacs/Vim/Atom... magnetized needle/butterfly</li>
-				<li>Keep it in your version control system</li>
-				<li>Test it with your CI system</li>
-			      </ul>
-
-			      <aside class="notes">
-				This may not seem particularly groundbreaking, but if you compare it to Drupal/Wordpress where site structure is in the database with content...
-			      </aside>
-			    </section>
-
-<!--			    <section>
-			      <img width="40%" src="/images/real_programmers_crop.png" />
-			    </section> -->
-
-			    <section>
-			      <h2>Mezzanine Features</h2>
-
-			      <h3>Friendly editing interface</h3>
-
-			      <ul>
-				<li>django-grappelli for the admin interface</li>
-				<li>TinyMCE4 editor WYSIWYG, can be replaced</li>
-				<li>Inline editing</li>
+				<li>Seperate site structure and content</li>
+				<li>Friendly editing interface</li>
+				<li>Disqus, Akismet, Google Analytics integration</li>
+				<li>Built on top of Django</li>
 			      </ul>
 			    </section>
-			  </section>
 
 			  <section>
 			    <section>
@@ -173,6 +134,7 @@ mezzanine-project my_first_mezzanine_site
 			      <ul>
 				<li>Mezzanine is just a set of tools</li>
 				<li>No point reinventing tools that already exist</li>
+				<li>Full Django ecosystem to draw from</li>
 			      </ul>
 			    </section>
 
@@ -251,13 +213,32 @@ mezzanine-project my_first_mezzanine_site
 				<li>Deploy the wheel into a virtualenv</li>
 				<li>Use configparser to load a settings file</li>
 				<li>nginx + gunicorn</li>
-				<li>Separate apps for models + theme/templates</li>
+			      </ul>
+
+			    </section>
+
+			    <section>
+			      <h2>Structure of a Mezzanine Site</h2>
+
+			      <h3>Mezzanine specificaly</h3>
+
+			      <ul>
+				<li>Separate apps for models / theme, templates</li>
 				<li>Demo site has an example of how to do this</li>
 			      </ul>
 			    </section>
 			  </section>
+
 			  <section>
 			    <h1>Demo</h1>
+
+			    <aside class="notes">
+			      <ul>
+				<li>Pages</li>
+				<li>Admin</li>
+				<li>Widgets</li>
+			      </ul>
+			    </aside>
 			  </section>
 
 			  <section>
@@ -310,6 +291,13 @@ class Employee(Page, RichText):
     photo = FileField(blank=True)
 			      </code></pre>
 
+			      <aside class="notes">
+				<ul>
+				  <li>Derive from Page</li>
+				  <li>RichText != RichTextPage, adds a content field</li>
+				</ul>
+			      </aside>
+
 			    </section>
 
 			    <section>
@@ -322,6 +310,12 @@ from mezzanine.pages.admin import PageAdmin
 
 admin.site.register(models.Employee, PageAdmin)
 			      </code></pre>
+
+			      <aside class="notes">
+				<ul>
+				  <li>PageAdmin</li>
+				</ul>
+			      </aside>
 
 			    </section>
 
@@ -337,7 +331,7 @@ admin.site.register(models.Employee, PageAdmin)
 {% block right_panel %}
 <div class="panel panel-default">
   <div class="panel-body">
-    <img src="{{ MEDIA_URL }}{{ page.employee.photo }}" />
+    <img src="{{ MEDIA_URL }}{% thumbnail page.employee.photo 200 0 %}" />
   </div>
 </div>
 {% endblock %}
@@ -349,6 +343,14 @@ admin.site.register(models.Employee, PageAdmin)
 {% endblock %}
 
 			      </code></pre>
+
+			      <aside class="notes">
+				<ul>
+				  <li>Extend the pages/page template</li>
+				  <li>Thumbnailing</li>
+				  <li>editable</li>
+				</ul>
+			      </aside>
 
 			    </section>
 
@@ -368,23 +370,6 @@ admin.site.register(models.Employee, PageAdmin)
 
 			    </section>
 
-			    <section>
-			      <h2>Page-based</h2>
-
-			      <h3>Aside: Template look-up order</h3>
-
-			      <p>eg, directors/big-boss, type <code>Employee</code></p>
-
-			      <ul>
-				<li>pages/big-boss.html</li>
-				<li>pages/employee.html</li>
-				<li>pages/directors/big-boss.html</li>
-				<li>pages/directors/big-boss/employee.html</li>
-				<li>pages/directors/employee.html</li>
-				<li>pages/page.html</li>
-			      </ul>
-
-			    </section>
 			  </section>
 
 			  <section>
@@ -423,6 +408,13 @@ class Widget(Displayable, RichText):
         return self.category.get_absolute_url() + self.slug
 			      </code></pre>
 
+			      <aside class="notes">
+				<ul>
+				  <li>Displayable instead of Page</li>
+				  <li>get_absolute_url</li>
+				</ul>
+			      </aside>
+
 			    </section>
 
 			    <section>
@@ -442,10 +434,15 @@ widget_fieldsets[0][1]["fields"].insert(1, "content")
 class WidgetAdmin(DisplayableAdmin):
 
     fieldsets = widget_fieldsets
-    inlines = (TechnicalDocumentInline,)
 
 admin.site.register(models.Widget, WidgetAdmin)
 			      </code></pre>
+
+			      <aside class="notes">
+				<ul>
+				  <li>Need to explicitly update fieldset for Displayable</li>
+				</ul>
+			      </aside>
 
 			    </section>
 
@@ -471,6 +468,14 @@ class WidgetView(TemplateView):
         context['editable_obj'] = context['widget']
         return context
 			      </code></pre>
+
+			      <aside class="notes">
+				<ul>
+				  <li>Standard Django TemplateView</li>
+				  <li>.published()</li>
+				  <li>editable_obj</li>
+				</ul>
+			      </aside>
 			    </section>
 
 			    <section>
@@ -492,6 +497,12 @@ class WidgetView(TemplateView):
 {% endeditable %}
 {% endblock %}
 			      </code></pre>
+
+			      <aside class="notes">
+				<ul>
+				  <li>Same as a page</li>
+				</ul>
+			      </aside>
 
 			    </section>
 
@@ -519,6 +530,7 @@ class WidgetView(TemplateView):
 				<li>Everything else is content, store it in a database</li>
 				<li>Continuous Integration!</li>
 				<li>Repeatable Deploys!</li>
+				<li>No risk of getting staging data in your prod database</li>
 			      </ul>
 
 			    </section>
@@ -543,17 +555,6 @@ class WidgetView(TemplateView):
 				<li>Default templates suggest a sensible approach, override them if you want</li>
 			      </ul>
 
-			    </section>
-
-			    <section>
-			      <h2>Things Mezzanine does well</h2>
-
-			      <h3>Timed publish and expire</h3>
-
-			      <ul>
-				<li>Built in</li>
-				<li>Just works</li>
-			      </ul>
 			    </section>
 
 			    <section>
@@ -605,7 +606,9 @@ class WidgetView(TemplateView):
 			    </section>
 
 			    <section>
-			      <h2>Code changes are common</h2>
+			      <h2>Things Mezzanine doesn't do so well</h2>
+
+			      <h3>Code changes are common</h3>
 
 			      <ul>
 				<li>Not for organizations that find code deploys hard/scary</li>
